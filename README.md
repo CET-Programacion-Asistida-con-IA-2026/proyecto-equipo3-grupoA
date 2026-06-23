@@ -1,35 +1,17 @@
 ## Grupo A - Equipo {3}
 _Curso de Programación Asistida con IA - Chicas en Tecnología_ 🚀
 
-```⚠️ Dejar la opción correcta entre Grupo A (Grupo de 17 a 19hs) y Grupo B (Grupo de 19 a 21hs) y agregar el número de equipo ⚠️```
-
-En este repositorio, se presenta el sitio web realizado durante el curso de programación frontend de CET.
-
-### 📄 Entregas
-**Entrega #1**: planificación de la solución y primeros resultados que obtengamos con la IA:
-
-📝 Edición del Archivo README incluyendo:
-- Definición de la problemática que eligieron abordar
-- Relación con los *Objetivos de Desarrollo Sostenible (ODS)*[^1]
-- Explicación de la solución tecnológica que están desarrollando
-> [!TIP]
-> Aprovechen los [formatos del README](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) para escribir diferentes secciones
-
-🎨 Moodboard
-
-🧩 Archivos generados con asistencia de IA: ```index.html```, ```style.css```, ```script.js```
-
-
-**Entrega #2 (Final)**: se esperan modificaciones en el código respecto a la entrega anterior, que pueden incluir nuevos archivos o extensión de los existentes (debe haber al menos un archivo de cada lenguaje visto - HTML, CSS y Javascript)
-
-💡 Es una buena idea llevar un registro de lo que cambiamos. Por ejemplo
-```
-- Agregamos Bootstrap para el carrousel de imágenes...
-- Modificamos el texto de la sección de bienvenida...
-- Transformamos los textos sobre redes sociales en links...
-```
-
-Ahora si, ¡A programar! 🚀
-
-
-[^1]: Los Objetivos de Desarrollo Sostenible u Objetivos Globales, también conocidos como Agenda 2030, son 17 objetivos globales interconectados diseñados para ser un «plan para lograr un futuro mejor y más sostenible para todos». Más información en https://www.un.org/sustainabledevelopment/es/objetivos-de-desarrollo-sostenible/
+"Avisá que llegué" que es un sitio web pensado para mujeres de todas las edades que viajan solas y necesiten un espacio en donde puedan sentir el resguardo de hacerlo, donde puedan informarse sobre como viajar más seguras, métodos de defensa persoanl, asesoramiento en base a distintos tipos de viaje (a pie, en auto, de noche, etc), información oficial sobre distinas aplicaciones de viajes, como comparitr ubicación, la posibilidad de agregar contactos de emergencia y poder compartiles información personal, poder rellenar una planilla de datos personales e importantes en caso de emergencia. Un mapa con distintos puntos de ayuda en caso de emergencia por toda CABA (comisaría de la mujer, hospitales/salitas con guardia las 24hs, controles integrales de la mujer [CIM], líneas telefónicas que no cuentan con un punto presencial, pero tienen asesoramiento las 24hs, etc).
+Es un sitio pensado de manera realista dentro de BS.AS, por lo que deicidimos agregarle una opción de poder elegir el idioma de la página, para que también las mujeres extranjeras que viajen a nuestro país se puedan sentir seguras y que no están solas en un lugar tan lejos de casa. 
+Pensamos que nuestra idea encaja con las sigueintes ODS:
+- 5 Igualdad de género: El eje central del sitio es brindar a las mujeres herramientas concretas de autonomía y protección, reduciendo la vulnerabilidad asociada a viajar o desplazarse solas. Acercar información clara sobre violencia de género y los canales de denuncia y asistencia (Línea 144, OVD, Centros Integrales de la Mujer) contribuye a la prevención y al acceso a la justicia.
+- 11 Ciudades y comunidades sostenibles: Al mapear y visibilizar los recursos de ayuda disponibles en las distintas comunas de CABA, el proyecto aporta a que el espacio urbano sea más seguro, inclusivo y accesible para las mujeres que lo habitan o lo visitan.
+- 16 Paz, Justicia  e instituciones solidas: Difundir los canales oficiales de denuncia y asistencia (líneas nacionales, consulados, organismos internacionales) fortalece el vínculo entre la ciudadanía y las instituciones que deben garantizar protección y acceso a la justicia.
+- 17 Alianza para lograr objetivos: El sitio articula información de organismos públicos (Línea 137, Línea 144, OVD), empresas privadas (apps de transporte) y la propia comunidad de usuarias (formulario de consejos), mostrando cómo distintos actores pueden complementarse para un mismo objetivo.
+Como aclaración incluimos que nuestro sitio web esta creado de manera informativa;
+- No reemplaza la asistencia personal y policial, ni mucho busca hacerlo.
+- Las técnicas de defensa personal descriptas son nociones básicas, se recomienda complementarlas con clases presencilaes  o cursos certificados.
+- El spray de pimienta y otras herrramientas de defensa personal pueden estar regulasdos o prohibidos según la jurisdicción o país, se recomienda verificar la legislación local antes de adquirirlos o viajar con ellos.
+- La sección de "Apps de viaje" describe funciones de seguridad que pueden variar según el país, la versión de la app o cambios futuros de cada plataforma. Se recomienda revisar la app actualizada antes de cada viaje.
+- Los contactos de emergencia listados corresponden principalmente a Argentina; si viajás a otro país, buscá los equivalentes locales antes de tu viaje.
+- El sitio está pensado como proyecto educativo de portfolio en el marco de un curso de programación, no como un producto comercial o institucional oficial.
