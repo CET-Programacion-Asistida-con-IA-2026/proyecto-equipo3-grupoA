@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<
+      <div class="col-text fade-in">!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -65,7 +66,6 @@
   <!-- SECCIÓN 1: ¿POR QUÉ ES IMPORTANTE? -->
   <section class="section" id="por-que">
     <div class="container two-col">
-      <div class="col-text fade-in">
         <span class="section-label">01</span>
         <h2 class="section-title">¿Por qué es importante la seguridad al viajar solo?</h2>
         <p>Viajar en solitario es una experiencia transformadora, pero también expone a riesgos únicos que, con la información correcta, se pueden anticipar y reducir.</p>
@@ -328,6 +328,46 @@
       </div>
     </div>
   </section>
+  <!-- CENTROS DE ATENCIÓN A LA MUJER -->
+<section class="section section-tinted" id="centros">
+  <div class="container fade-in">
+
+    <span class="section-label">Recursos de ayuda</span>
+
+    <h2 class="section-title">
+      Centros de atención a la mujer
+    </h2>
+
+    <p class="section-intro">
+      Encontrá comisarías especializadas, centros integrales y espacios
+      de asistencia cercanos. Podés buscar por localidad, nombre o tipo
+      de organismo.
+    </p>
+
+    <div class="centros-filtros">
+
+      <input 
+        type="text" 
+        id="buscarCentro"
+        placeholder="Buscar por nombre, localidad o dirección..."
+      >
+
+      <select id="filtroTipo">
+        <option value="todos">Todos los centros</option>
+        <option value="comisaria">Comisarías de la Mujer</option>
+        <option value="centro">Centros Integrales</option>
+        <option value="justicia">Centros de Justicia</option>
+        <option value="otro">Otros organismos</option>
+      </select>
+
+    </div>
+
+    <p id="centrosContador"></p>
+
+    <div id="centrosGrid" class="centros-grid"></div>
+
+  </div>
+</section>
 
   <!-- FORMULARIO / CONTACTO -->
   <section class="section" id="contacto">
