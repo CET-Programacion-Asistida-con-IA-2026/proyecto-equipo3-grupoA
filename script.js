@@ -477,46 +477,56 @@ function mostrarCentros(lista){
     tarjeta.classList.add("centro-card");
 
 
-    tarjeta.innerHTML = `
+const tipos = {
+  comisaria: "COMISARÍA",
+  centro: "CENTRO INTEGRAL",
+  justicia: "JUSTICIA",
+  otro: "ORGANISMO"
+};
 
-    <h3>${centro.nombre}</h3>
+tarjeta.innerHTML = `
 
-    <p>
-    <strong>Tipo:</strong> ${centro.tipo}
-    </p>
+<div class="card-top">
 
-    <p>
-    <strong>Dirección:</strong> ${centro.direccion}
-    </p>
+  <div class="card-icon">📍</div>
 
-    <p>
-    <strong>Teléfono:</strong>
-    ${
-      centro.telefono !== "Consultar"
-      ? `<a href="tel:${centro.telefono}">
-      ${centro.telefono}
-      </a>`
-      :
-      "Consultar"
-    }
-    </p>
+  <span class="card-tag">
+    ${tipos[centro.tipo]}
+  </span>
+
+</div>
+
+<h3>${centro.nombre}</h3>
+
+<hr>
+
+<p class="card-info">
+  📍 ${centro.direccion}
+</p>
+
+<p class="card-info">
+  ☎ ${
+    centro.telefono !== "Consultar"
+    ? `<a href="tel:${centro.telefono}">${centro.telefono}</a>`
+    : "Consultar"
+  }
+</p>
+
+<a
+class="btn-maps"
+href="${crearLinkMaps(centro)}"
+target="_blank">
+
+Ver en Google Maps
+
+</a>
+
+`;
 
 
-    <a 
-    class="btn-maps"
-    href="${crearLinkMaps(centro)}"
-    target="_blank">
-    📍 Ver en Google Maps
-    </a>
-
-    `;
-
-
-    centrosGrid.appendChild(tarjeta);
-
+centrosGrid.appendChild(tarjeta);
 
   });
-
 
 }
 
