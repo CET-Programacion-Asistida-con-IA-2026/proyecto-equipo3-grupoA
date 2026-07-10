@@ -1,591 +1,253 @@
-/* ===========================
-   ViajaSafe — script.js
-=========================== */
-
-// ---- NAVBAR SCROLL ----
-const navbar = document.getElementById('navbar');
-
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 60) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
+// Navbar toggle
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
 });
 
-// ---- MOBILE NAV TOGGLE ----
-const navToggle = document.getElementById('navToggle');
-const navLinks = document.getElementById('navLinks');
-
-navToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
-});
-
-// Cerrar el menú al hacer clic en un enlace
-navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('open');
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
   });
 });
 
-// ---- FADE IN ON SCROLL (Intersection Observer) ----
-const fadeEls = document.querySelectorAll('.fade-in');
+// Carousel
+const track = document.getElementById('carouselTrack');
+const cards = track.querySelectorAll('.app-card');
+const dotsContainer = document.getElementById('carouselDots');
+let current = 0;
 
-const fadeObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        fadeObserver.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.12 }
-);
+const visibleCount = () => window.innerWidth <= 768 ? 1 : 3;
 
-fadeEls.forEach(el => fadeObserver.observe(el));
+function maxIndex() {
+  return cards.length - visibleCount();
+}
 
-// ---- ACCORDION ----
-const accordionItems = document.querySelectorAll('.accordion-item');
+// Create dots
+cards.forEach((_, i) => {
+  if (i > maxIndex()) return;
+  const dot = document.createElement('div');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.addEventListener('click', () => goTo(i));
+  dotsContainer.appendChild(dot);
+});
 
-accordionItems.forEach(item => {
-  const btn = item.querySelector('.accordion-btn');
+function goTo(idx) {
+  current = Math.max(0, Math.min(idx, maxIndex()));
+  const cardW = cards[0].offsetWidth + 20;
+  track.style.transform = `translateX(-${current * cardW}px)`;
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+}
 
+document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+
+// Accordion
+document.querySelectorAll('.accordion-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    const isOpen = item.classList.contains('open');
-
-    // Cerrar todos
-    accordionItems.forEach(i => i.classList.remove('open'));
-
-    // Abrir el clickeado (si no estaba abierto)
+    const content = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    document.querySelectorAll('.accordion-btn').forEach(b => {
+      b.classList.remove('open');
+      b.nextElementSibling.classList.remove('open');
+    });
     if (!isOpen) {
-      item.classList.add('open');
+      btn.classList.add('open');
+      content.classList.add('open');
     }
   });
 });
 
-// ---- ACTIVE NAV LINK ON SCROLL ----
-const sections = document.querySelectorAll('section[id], header[id]');
-const navAnchors = document.querySelectorAll('.nav-links a');
+// ── AUTH & PERFIL ──
+let currentUser = JSON.parse(localStorage.getItem('aql_user') || 'null');
 
-const sectionObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.getAttribute('id');
-        navAnchors.forEach(a => {
-          a.classList.remove('active');
-          if (a.getAttribute('href') === `#${id}`) {
-            a.classList.add('active');
-          }
-        });
-      }
-    });
-  },
-  { rootMargin: '-40% 0px -55% 0px' }
-);
+function openLogin() { document.getElementById('loginOverlay').classList.add('open'); }
+function closeLogin() { document.getElementById('loginOverlay').classList.remove('open'); }
+function openProfile() { loadProfileUI(); document.getElementById('profileOverlay').classList.add('open'); }
+function closeProfile() { document.getElementById('profileOverlay').classList.remove('open'); }
 
-sections.forEach(s => sectionObserver.observe(s));
-
-// ---- FORMULARIO ----
-const form = document.getElementById('commentForm');
-const formSuccess = document.getElementById('formSuccess');
-const userNameInput = document.getElementById('userName');
-const userCommentInput = document.getElementById('userComment');
-const errorNombre = document.getElementById('errorNombre');
-const errorComentario = document.getElementById('errorComentario');
-
-function validateField(input, errorEl, message) {
-  if (!input.value.trim()) {
-    input.classList.add('error');
-    errorEl.textContent = message;
-    return false;
-  }
-  input.classList.remove('error');
-  errorEl.textContent = '';
-  return true;
-}
-
-userNameInput.addEventListener('input', () => {
-  if (userNameInput.value.trim()) {
-    userNameInput.classList.remove('error');
-    errorNombre.textContent = '';
-  }
-});
-
-userCommentInput.addEventListener('input', () => {
-  if (userCommentInput.value.trim()) {
-    userCommentInput.classList.remove('error');
-    errorComentario.textContent = '';
-  }
-});
-
-form.addEventListener('submit', (e) => {
+document.getElementById('navPerfilBtn').addEventListener('click', e => {
   e.preventDefault();
-
-  const nombreValido = validateField(
-    userNameInput,
-    errorNombre,
-    'Por favor, ingresá tu nombre.'
-  );
-  const comentarioValido = validateField(
-    userCommentInput,
-    errorComentario,
-    'Por favor, escribí un comentario antes de enviar.'
-  );
-
-  if (!nombreValido || !comentarioValido) return;
-
-  // Simular envío exitoso
-  form.style.opacity = '0';
-  form.style.transform = 'translateY(-10px)';
-  form.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-
-  setTimeout(() => {
-    form.style.display = 'none';
-    formSuccess.classList.remove('hidden');
-    formSuccess.style.opacity = '0';
-    formSuccess.style.transform = 'translateY(10px)';
-    formSuccess.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        formSuccess.style.opacity = '1';
-        formSuccess.style.transform = 'translateY(0)';
-      });
-    });
-  }, 350);
+  currentUser ? openProfile() : openLogin();
 });
-
-// ---- SMOOTH ACTIVE LINK STYLE ----
-const styleTag = document.createElement('style');
-styleTag.textContent = `
-  .nav-links a.active {
-    color: var(--clr-accent) !important;
-  }
-`;
-document.head.appendChild(styleTag);
-// ===========================
-// CENTROS DE ATENCIÓN A LA MUJER
-// LISTA DE CENTROS
-// ===========================
-
-const centros = [
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Tres de Febrero",
-tipo:"comisaria",
-direccion:"Tres de Febrero, Buenos Aires",
-telefono:"011 2194-2533"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - San Martín",
-tipo:"comisaria",
-direccion:"San Martín, Buenos Aires",
-telefono:"011 4512-6712"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - San Justo",
-tipo:"comisaria",
-direccion:"San Justo, La Matanza, Buenos Aires",
-telefono:"Consultar"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Morón",
-tipo:"comisaria",
-direccion:"Morón, Buenos Aires",
-telefono:"Consultar"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - José León Suárez",
-tipo:"comisaria",
-direccion:"José León Suárez, San Martín, Buenos Aires",
-telefono:"Consultar"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Hurlingham",
-tipo:"comisaria",
-direccion:"Hurlingham, Buenos Aires",
-telefono:"Consultar"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Gregorio de Laferrere",
-tipo:"comisaria",
-direccion:"Gregorio de Laferrere, La Matanza, Buenos Aires",
-telefono:"011 2102-4555"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - San Isidro",
-tipo:"comisaria",
-direccion:"San Isidro, Buenos Aires",
-telefono:"Consultar"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - San Fernando",
-tipo:"comisaria",
-direccion:"San Fernando, Buenos Aires",
-telefono:"011 4519-9882"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Vicente López",
-tipo:"comisaria",
-direccion:"Vicente López, Buenos Aires",
-telefono:"011 4711-7887"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Tigre",
-tipo:"comisaria",
-direccion:"Tigre, Buenos Aires",
-telefono:"011 2121-6865"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Esteban Echeverría",
-tipo:"comisaria",
-direccion:"Esteban Echeverría, Buenos Aires",
-telefono:"Consultar"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Lomas de Zamora",
-tipo:"comisaria",
-direccion:"Lomas de Zamora, Buenos Aires",
-telefono:"011 4244-1474"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Florencio Varela",
-tipo:"comisaria",
-direccion:"Florencio Varela, Buenos Aires",
-telefono:"Consultar"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Ituzaingó",
-tipo:"comisaria",
-direccion:"Ituzaingó, Buenos Aires",
-telefono:"Consultar"
-},
-
-{
-nombre:"Comisaría de la Mujer y la Familia - Merlo",
-tipo:"comisaria",
-direccion:"Merlo, Buenos Aires",
-telefono:"(0220) 483-6060"
-},
-
-{
-nombre:"Centro Integral de la Mujer Isabel Calvo",
-tipo:"centro",
-direccion:"Humberto 1° 250, San Telmo, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Centro Integral de la Mujer Alicia Moreau",
-tipo:"centro",
-direccion:"Presidente José Evaristo Uriburu 1022, Recoleta, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Centro Integral de la Mujer Margarita Malharro",
-tipo:"centro",
-direccion:"Agüero 301, Almagro, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Centro Integral de la Mujer Pepa Gaitán",
-tipo:"centro",
-direccion:"Pichincha 1765, Boedo, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Centro Integral de la Mujer Florentina Gómez Miranda",
-tipo:"centro",
-direccion:"Patricias Argentinas 277, Caballito, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Centro Integral de la Mujer Dignxs de Ser",
-tipo:"centro",
-direccion:"Lautaro 188, Flores, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Centro Integral de la Mujer Minerva Mirabal",
-tipo:"centro",
-direccion:"Av. Fernández de la Cruz 4208, Villa Lugano, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Centro Integral de la Mujer Carolina Muzzili",
-tipo:"centro",
-direccion:"Avellaneda 3751, Floresta, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Centro Integral de la Mujer María Gallego",
-tipo:"centro",
-direccion:"Av. Francisco Beiró 5229, Villa Devoto, CABA",
-telefono:"011 4568-1245"
-},
-
-{
-nombre:"Centro Integral de la Mujer Lohana Berkins",
-tipo:"centro",
-direccion:"Av. Triunvirato y Crisólogo Larralde, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Centro Integral de la Mujer Macacha Güemes",
-tipo:"centro",
-direccion:"Vuelta de Obligado 1524, Belgrano, CABA",
-telefono:"Consultar"
-},
-{
-nombre:"Centro de Justicia de la Mujer - La Boca",
-tipo:"justicia",
-direccion:"Av. Don Pedro de Mendoza 2689, La Boca, CABA",
-telefono:"0800-999-68537"
-},
-
-{
-nombre:"Centro de Justicia de la Mujer - Caballito",
-tipo:"justicia",
-direccion:"Yerbal 31, Caballito, CABA",
-telefono:"0800-999-68537"
-},
-
-{
-nombre:"Centro de Justicia de la Mujer - Microcentro",
-tipo:"justicia",
-direccion:"Av. de Mayo 654, CABA",
-telefono:"0800-999-68537"
-},
-
-{
-nombre:"Subsecretaría de Mujeres, Géneros y Diversidad",
-tipo:"otro",
-direccion:"Av. 53 N°653, La Plata, Buenos Aires",
-telefono:"(221) 489-3960"
-},
-
-{
-nombre:"Casa de la Mujer",
-tipo:"otro",
-direccion:"Av. Francisco Beiró 5229, Villa Devoto, CABA",
-telefono:"(011) 4512-6712"
-},
-
-{
-nombre:"Dirección General de Violencia de Género - Sede Central",
-tipo:"otro",
-direccion:"Rodney 301, Chacarita, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Dirección General de Violencia de Género - Sede Comuna 1",
-tipo:"otro",
-direccion:"Av. de los Inmigrantes 2250, Retiro, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Dirección General de Violencia de Género - Sede Comuna 4",
-tipo:"otro",
-direccion:"Zavaleta 425, Parque Patricios, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Dirección General de Violencia de Género - Sede Comuna 6",
-tipo:"otro",
-direccion:"Av. Patricias Argentinas 277, Caballito, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Dirección General de Violencia de Género - Sede Comuna 8",
-tipo:"otro",
-direccion:"Av. Roca 5252, Villa Lugano, CABA",
-telefono:"Consultar"
-},
-
-{
-nombre:"Violencia Familiar y de Género - Oficina de Atención",
-tipo:"otro",
-direccion:"Ciudad de Buenos Aires",
-telefono:"Consultar"
-}
-
-];
-
-
-// ===========================
-// FUNCIONES DE CENTROS
-// ===========================
-
-const centrosGrid = document.getElementById("centrosGrid");
-const buscarCentro = document.getElementById("buscarCentro");
-const filtroTipo = document.getElementById("filtroTipo");
-const centrosContador = document.getElementById("centrosContador");
-
-
-function crearLinkMaps(centro){
-
-  const direccion = `${centro.nombre} ${centro.direccion}`;
-
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion)}`;
-
-}
-
-
-function mostrarCentros(lista){
-
-  if(!centrosGrid) return;
-
-  centrosGrid.innerHTML = "";
-
-  centrosContador.textContent =
-  `${lista.length} centros encontrados`;
-
-
-  lista.forEach(centro=>{
-
-
-    const tarjeta = document.createElement("article");
-
-    tarjeta.classList.add("centro-card");
-
-
-const tipos = {
-  comisaria: "COMISARÍA",
-  centro: "CENTRO INTEGRAL",
-  justicia: "JUSTICIA",
-  otro: "ORGANISMO"
-};
-
-tarjeta.innerHTML = `
-
-<div class="card-top">
-
-  <div class="card-icon">📍</div>
-
-  <span class="card-tag">
-    ${tipos[centro.tipo]}
-  </span>
-
-</div>
-
-<h3>${centro.nombre}</h3>
-
-<hr>
-
-<p class="card-info">
-  📍 ${centro.direccion}
-</p>
-
-<p class="card-info">
-  ☎ ${
-    centro.telefono !== "Consultar"
-    ? `<a href="tel:${centro.telefono}">${centro.telefono}</a>`
-    : "Consultar"
-  }
-</p>
-
-<a
-class="btn-maps"
-href="${crearLinkMaps(centro)}"
-target="_blank">
-
-Ver en Google Maps
-
-</a>
-
-`;
-
-
-centrosGrid.appendChild(tarjeta);
-
+document.getElementById('closeLogin').addEventListener('click', closeLogin);
+document.getElementById('closeProfile').addEventListener('click', closeProfile);
+document.getElementById('loginOverlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeLogin(); });
+document.getElementById('profileOverlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeProfile(); });
+
+// Auth tabs
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('auth-' + tab.dataset.auth).classList.add('active');
   });
-
-}
-
-
-
-function filtrarCentros(){
-
-
-const texto = buscarCentro.value.toLowerCase();
-
-const tipo = filtroTipo.value;
-
-
-const resultado = centros.filter(centro=>{
-
-
-const coincideTexto =
-centro.nombre.toLowerCase().includes(texto) ||
-(centro.direccion &&
-centro.direccion.toLowerCase().includes(texto));
-
-const coincideTipo =
-tipo === "todos" ||
-centro.tipo === tipo;
-
-
-return coincideTexto && coincideTipo;
-
-
 });
 
-
-mostrarCentros(resultado);
-
-
+function fakeLogin(name, email) {
+  currentUser = { name, email, profile: {} };
+  localStorage.setItem('aql_user', JSON.stringify(currentUser));
+  closeLogin();
+  openProfile();
 }
 
+document.getElementById('loginBtn').addEventListener('click', () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  if (!email || !pass) return alert('Completá tu email y contraseña.');
+  fakeLogin(email.split('@')[0], email);
+});
 
+document.getElementById('registerBtn').addEventListener('click', () => {
+  const name  = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass  = document.getElementById('regPass').value;
+  if (!name || !email || !pass) return alert('Completá todos los campos.');
+  if (pass.length < 8) return alert('La contraseña debe tener al menos 8 caracteres.');
+  fakeLogin(name, email);
+});
 
-if(buscarCentro){
+document.getElementById('googleLoginBtn').addEventListener('click', () => fakeLogin('Usuaria Google', 'usuaria@gmail.com'));
+document.getElementById('googleRegisterBtn').addEventListener('click', () => fakeLogin('Usuaria Google', 'usuaria@gmail.com'));
 
-buscarCentro.addEventListener(
-"input",
-filtrarCentros
-);
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('aql_user');
+  currentUser = null;
+  closeProfile();
+});
 
+document.getElementById('saveProfileBtn').addEventListener('click', () => {
+  if (!currentUser) return;
+  currentUser.profile = {
+    nombre: document.getElementById('pNombre').value,
+    fecha: document.getElementById('pFecha').value,
+    nacionalidad: document.getElementById('pNacionalidad').value,
+    documento: document.getElementById('pDocumento').value,
+    direccion: document.getElementById('pDireccion').value,
+    sangre: document.getElementById('pSangre').value,
+    vision: document.getElementById('pVision').value,
+    condiciones: document.getElementById('pCondiciones').value,
+    alojamiento: document.getElementById('pAlojamiento').value,
+    pasaporte: document.getElementById('pPasaporte').value,
+    pasaporteVenc: document.getElementById('pPasaporteVenc').value,
+    seguro: document.getElementById('pSeguro').value,
+    seguroTel: document.getElementById('pSeguroTel').value,
+    notas: document.getElementById('pNotas').value,
+    alergias: Array.from(document.querySelectorAll('#alergiasWrap .tag')).map(t => t.dataset.value),
+    medicamentos: Array.from(document.querySelectorAll('#medicamentosWrap .tag')).map(t => t.dataset.value),
+  };
+  localStorage.setItem('aql_user', JSON.stringify(currentUser));
+  generateQR();
+  const btn = document.getElementById('saveProfileBtn');
+  btn.textContent = '✓ Guardado';
+  btn.style.background = 'var(--plum)';
+  setTimeout(() => { btn.textContent = 'Guardar cambios'; btn.style.background = ''; }, 2000);
+});
+
+function loadProfileUI() {
+  if (!currentUser) return;
+  const initials = currentUser.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('profileAvatar').textContent = initials;
+  document.getElementById('profileName').textContent = currentUser.name;
+  document.getElementById('profileEmailDisplay').textContent = currentUser.email;
+  const p = currentUser.profile || {};
+  const fields = ['pNombre','pFecha','pNacionalidad','pDocumento','pDireccion','pSangre','pVision','pCondiciones','pAlojamiento','pPasaporte','pPasaporteVenc','pSeguro','pSeguroTel','pNotas'];
+  const keys   = ['nombre','fecha','nacionalidad','documento','direccion','sangre','vision','condiciones','alojamiento','pasaporte','pasaporteVenc','seguro','seguroTel','notas'];
+  fields.forEach((id,i) => { const el = document.getElementById(id); if(el && p[keys[i]]) el.value = p[keys[i]]; });
+  // tags
+  (p.alergias||[]).forEach(v => addTag('alergiasWrap', v));
+  (p.medicamentos||[]).forEach(v => addTag('medicamentosWrap', v));
+  generateQR();
 }
 
-
-if(filtroTipo){
-
-filtroTipo.addEventListener(
-"change",
-filtrarCentros
-);
-
+// Tags
+function addTag(wrapId, value) {
+  if (!value) return;
+  const wrap = document.getElementById(wrapId);
+  const existing = Array.from(wrap.querySelectorAll('.tag')).map(t=>t.dataset.value);
+  if (existing.includes(value)) return;
+  const tag = document.createElement('span');
+  tag.className = 'tag'; tag.dataset.value = value;
+  tag.innerHTML = value + ' <span class="tag-remove">✕</span>';
+  tag.querySelector('.tag-remove').addEventListener('click', () => tag.remove());
+  wrap.insertBefore(tag, wrap.querySelector('.tag-add-input'));
 }
 
+document.getElementById('alergiaInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { addTag('alergiasWrap', e.target.value.trim()); e.target.value = ''; }
+});
+document.getElementById('medicamentoInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { addTag('medicamentosWrap', e.target.value.trim()); e.target.value = ''; }
+});
 
-// mostrar al cargar
+// Contactos
+document.getElementById('addContactBtn').addEventListener('click', () => {
+  const c = document.createElement('div');
+  c.className = 'contact-card'; c.style.marginBottom = '0.5rem';
+  c.innerHTML = `<div><label class="input-label">Nombre</label><input type="text" placeholder="Ej: Mamá" /></div>
+    <div><label class="input-label">Teléfono</label><input type="tel" placeholder="+54 9 11..." /></div>
+    <button class="btn-icon" onclick="this.parentElement.remove()" style="margin-top:1.2rem;">✕</button>`;
+  document.getElementById('contactsContainer').appendChild(c);
+});
 
-mostrarCentros(centros);
+// Ubicación
+document.getElementById('getLocationBtn').addEventListener('click', () => {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude.toFixed(4);
+    const lng = pos.coords.longitude.toFixed(4);
+    document.getElementById('locationText').textContent = `Lat: ${lat}, Lng: ${lng}`;
+    if (currentUser) { currentUser.location = {lat, lng}; localStorage.setItem('aql_user', JSON.stringify(currentUser)); }
+  }, () => {
+    document.getElementById('locationText').textContent = 'No se pudo obtener la ubicación.';
+  });
+});
+
+// QR
+function generateQR() {
+  const canvas = document.getElementById('qrCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,120,120);
+  if (!currentUser) return;
+  const p = currentUser.profile || {};
+  const data = `EMERGENCIA\nNombre: ${p.nombre||currentUser.name}\nSangre: ${p.sangre||'N/D'}\nAlergias: ${(p.alergias||[]).join(', ')||'Ninguna'}\nMedicamentos: ${(p.medicamentos||[]).join(', ')||'Ninguno'}\nCondiciones: ${p.condiciones||'N/D'}`;
+  // QR simple visual (representación)
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,120,120);
+  ctx.fillStyle = '#552451';
+  const size = 4;
+  const hash = [...data].reduce((a,c) => a + c.charCodeAt(0), 0);
+  for (let r=0;r<30;r++) for(let c=0;c<30;c++) {
+    if (((r*31+c*7+hash)%3===0)||(r<7&&c<7&&!(r>1&&r<5&&c>1&&c<5))||(r<7&&c>22&&!(r>1&&r<5&&c>22&&c<26))||(r>22&&c<7&&!(r>22&&r<26&&c>1&&c<5)))
+      ctx.fillRect(c*size, r*size, size, size);
+  }
+}
+
+document.getElementById('downloadQrBtn').addEventListener('click', () => {
+  const canvas = document.getElementById('qrCanvas');
+  const link = document.createElement('a');
+  link.download = 'mi-qr-emergencia.png';
+  link.href = canvas.toDataURL();
+  link.click();
+});
+
+// ── FORMULARIO DE COMENTARIOS ──
+// Formulario
+document.getElementById('commentForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = document.getElementById('userName').value.trim();
+  const comment = document.getElementById('userComment').value.trim();
+  let valid = true;
+  document.getElementById('errorNombre').textContent = '';
+  document.getElementById('errorComentario').textContent = '';
+  if (!name) { document.getElementById('errorNombre').textContent = 'Por favor, ingresá tu nombre.'; valid = false; }
+  if (!comment) { document.getElementById('errorComentario').textContent = 'Por favor, escribí tu consejo.'; valid = false; }
+  if (valid) {
+    this.style.display = 'none';
+    document.getElementById('formSuccess').classList.remove('hidden');
+  }
+});
