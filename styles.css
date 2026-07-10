@@ -8,7 +8,7 @@
   --white:      #FFFFFF;
   --text:       #1a1a1a;
   --text-light: #5a4a5a;
-  --radius:     16px;
+  --radius:     16px;  
   --radius-sm:  8px;
 }
 
@@ -671,89 +671,384 @@ body {
   .app-card { flex: 0 0 85%; }
   .footer-inner { flex-direction: column; align-items: flex-start; }
 }
-  </style>
-</head>
-<body>
+/* ==================================================
+   CENTROS DE ATENCIÓN A LA MUJER
+================================================== */
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-<div class="nav-logo">Avisa que llegué</div>
-<button class="nav-toggle" id="navToggle">&#9776;</button>
-<ul class="nav-links" id="navLinks">
-  <li><a href="#por-que">¿Por qué?</a></li>
-  <li><a href="#defensa">Defensa</a></li>
-  <li><a href="#apps">Apps</a></li>
-  <li><a href="#cuidarse">Cuidarse</a></li>
-  <li><a href="#emergencias">Emergencias</a></li>
-  <li><a href="#contacto">Contacto</a></li>
-  <li><a href="#" id="navPerfilBtn" style="color:var(--fuchsia);font-weight:700;">👤 Mi perfil</a></li>
-</ul>
-  </nav>
+.centros-filtros{
+display:flex;
+flex-wrap:wrap;
+gap:15px;
+margin:30px 0;
+}
 
-  <!-- HERO -->
-  <header class="hero">
-<div class="hero-content">
-  <span class="hero-eyebrow">Seguridad para mujeres que viajan solas</span>
-  <h1 class="hero-title">Viajar sola,<br /><em>llegar bien.</em></h1>
-  <p class="hero-sub">Información, herramientas y consejos prácticos para que cada viaje sea tuyo — sin miedo, con comunidad.</p>
-  <a href="#por-que" class="btn-primary">Explorar la guía</a>
-</div>
+.centros-filtros input,
+.centros-filtros select{
+flex:1;
+min-width:250px;
+padding:14px 18px;
+border:2px solid #e6d7f7;
+border-radius:12px;
+font-size:1rem;
+outline:none;
+transition:0.3s;
+}
 
-<!-- TICKER con consejos -->
-<div class="ticker-wrap">
-  <div class="ticker-track" id="ticker">
-    <span class="ticker-item">Compartí tu ubicación en tiempo real con alguien de confianza</span>
-    <span class="ticker-item">Llevá siempre batería externa de respaldo</span>
-    <span class="ticker-item">Memorizá los números de emergencia del lugar</span>
-    <span class="ticker-item">Evitá mostrar objetos de valor en lugares concurridos</span>
-    <span class="ticker-item">Activá las opciones de seguridad en las apps de transporte</span>
-    <span class="ticker-item">Si algo no se siente bien, alejate. Tu intuición sabe</span>
-    <span class="ticker-item">Conocé dos rutas alternativas a tu alojamiento</span>
-    <span class="ticker-item">Informate sobre zonas de riesgo antes de llegar</span>
-    <!-- duplicado para loop continuo -->
-    <span class="ticker-item">Compartí tu ubicación en tiempo real con alguien de confianza</span>
-    <span class="ticker-item">Llevá siempre batería externa de respaldo</span>
-    <span class="ticker-item">Memorizá los números de emergencia del lugar</span>
-    <span class="ticker-item">Evitá mostrar objetos de valor en lugares concurridos</span>
-    <span class="ticker-item">Activá las opciones de seguridad en las apps de transporte</span>
-    <span class="ticker-item">Si algo no se siente bien, alejate. Tu intuición sabe</span>
-    <span class="ticker-item">Conocé dos rutas alternativas a tu alojamiento</span>
-    <span class="ticker-item">Informate sobre zonas de riesgo antes de llegar</span>
-  </div>
-</div>
-  </header>
+.centros-filtros input:focus,
+.centros-filtros select:focus{
+border-color:#8f4cc4;
+}
 
-  <!-- POR QUÉ -->
-  <section class="section" id="por-que">
-<div class="container">
-  <div class="why-grid">
-    <div class="why-text">
-      <span class="section-label">Por qué importa</span>
-      <h2 class="section-title">La seguridad no es paranoia.<br />Es preparación.</h2>
-      <p>Viajar sola es una experiencia transformadora, pero también expone a riesgos únicos que, con la información correcta, se pueden anticipar y reducir.</p>
-      <p>Conocer técnicas de defensa personal, usar las herramientas tecnológicas adecuadas y estar preparada ante una emergencia puede marcar la diferencia.</p>
-      <p>Esta guía nació para acompañarte: sin alarmismo, con datos reales y recursos concretos.</p>
-    </div>
-    <div class="stats-col">
-      <div class="stat-card">
-        <span class="stat-num">+60%</span>
-        <p>de viajeras solas reportan haber sentido inseguridad en algún momento de su viaje.</p>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num">3 de 4</span>
-        <p>incidentes se pudieron prevenir con información y preparación previa.</p>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num">100%</span>
-        <p>de los consejos de esta guía son gratuitos, accesibles y aplicables hoy mismo.</p>
-      </div>
-    </div>
-  </div>
-</div>
-  </section>
+#centrosContador{
+margin-bottom:25px;
+font-weight:600;
+color:#8f4cc4;
+}
 
-  <!-- DEFENSA + HERRAMIENTAS (TABS) -->
-  <section class="section section-dark" id="defensa">
-<div class="container">
-  <span class="section-label light">Protección</span>
-  <h2 class="section-title" style="color:var(--white)">Defensa personal y herramientas</h2>
+.centros-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:28px;
+}
+
+/* ===========================
+   TARJETAS
+=========================== */
+
+.centro-card{
+background:#fff;
+border-radius:20px;
+border-top: 6px solid #8F4CC4;
+overflow:hidden;
+box-shadow:0 15px 35px rgba(124,58,237,.12);
+transition:.3s;
+display:flex;
+flex-direction:column;
+}
+
+.centro-card:hover{
+transform:translateY(-8px);
+box-shadow:0 22px 45px rgba(124,58,237,.20);
+}
+
+/* ===========================
+   IMAGEN
+=========================== */
+
+.card-img{
+width:100%;
+height:190px;
+overflow:hidden;
+}
+
+.card-img img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+/* ===========================
+   ETIQUETA
+=========================== */
+
+.card-top{
+display:flex;
+justify-content:flex-end;
+padding:18px 20px 0;
+}
+
+.card-tag{
+background:#F3E8FF;
+color:#7C3AED;
+padding:6px 14px;
+border-radius:30px;
+font-size:.75rem;
+font-weight:bold;
+letter-spacing:.5px;
+}
+
+/* ===========================
+   TITULO
+=========================== */
+
+.centro-card h3{
+    padding:18px 20px 10px;
+    font-size:1.15rem;
+    font-weight:700;
+    color:#5B21B6;
+    line-height:1.4;
+}
+/* ===========================
+   LINEA
+=========================== */
+
+.centro-card hr{
+border:none;
+height:1px;
+background:#ececec;
+margin:0 20px 18px;
+}
+
+/* ===========================
+   INFORMACIÓN
+=========================== */
+
+.card-info{
+padding:0 20px;
+margin-bottom:12px;
+color:#555;
+font-size:.95rem;
+line-height:1.5;
+}
+
+.card-info a{
+color:#8f4cc4;
+text-decoration:none;
+font-weight:600;
+}
+
+.card-info a:hover{
+text-decoration:underline;
+}
+
+/* ===========================
+   BOTÓN
+=========================== */
+
+
+.btn-maps{
+margin:20px;
+padding:15px;
+background:linear-gradient(90deg,#A855F7,#EC4899);
+color:white;
+text-align:center;
+text-decoration:none;
+border-radius:14px;
+font-weight:700;
+transition:.3s;
+display:block;
+}
+
+.btn-maps:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 20px rgba(168,85,247,.35);
+}
+
+.btn-maps:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 20px rgba(168,85,247,.35);
+}
+#centros{
+    background:#FFF7FC;
+}
+
+/* =========================================
+   FONDO CENTROS
+========================================= */
+
+#centros{
+    position:relative;
+    background:#FFF7FC;
+    overflow:hidden;
+}
+
+#centros::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:url("imagenes/fondo.png.jpeg");
+
+    background-repeat:no-repeat;
+
+    background-position:center bottom;
+
+    background-size:cover;
+
+    opacity:.18;
+
+    pointer-events:none;
+
+}
+
+#centros .container{
+
+    position:relative;
+
+    z-index:2;
+
+}
+/*==================================
+        TÍTULO
+==================================*/
+
+.titulo-centros{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:15px;
+
+    color:#5B21B6;
+
+}
+
+.pin-titulo{
+
+    width:55px;
+
+    height:55px;
+
+}
+/*==================================
+        TARJETAS
+==================================*/
+
+.centro-card{
+
+    border-top:6px solid #8F4CC4;
+
+    border-radius:22px;
+
+    box-shadow:0 15px 35px rgba(124,58,237,.12);
+
+}
+
+.centro-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 22px 45px rgba(124,58,237,.22);
+
+}
+/*==================================
+        ETIQUETA
+==================================*/
+
+.card-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.card-icon{
+
+    width:45px;
+
+}
+
+.card-tag{
+
+    background:#F3E8FF;
+
+    color:#7C3AED;
+
+    padding:8px 16px;
+
+    border-radius:25px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+/*==================================
+        BOTÓN
+==================================*/
+
+.btn-maps{
+
+    background:linear-gradient(90deg,#A855F7,#EC4899);
+
+    border-radius:14px;
+
+    font-weight:bold;
+
+}
+
+.btn-maps:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 24px rgba(168,85,247,.35);
+
+}
+/*==================================
+        PAGINACIÓN
+==================================*/
+
+.paginacion{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    margin-top:40px;
+
+}
+
+.paginacion button{
+
+    background:#8F4CC4;
+
+    color:white;
+
+    border:none;
+
+    padding:12px 22px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.paginacion button:hover{
+
+    background:#6F2DBD;
+
+}
+.carrusel-centros{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.centros-ventana{
+    overflow:hidden;
+    width:100%;
+}
+
+.centros-grid{
+    display:flex;
+    gap:20px;
+    transition:transform 0.4s ease;
+}
+
+.centros-grid .card{
+    min-width:300px;
+}
+
+.carrusel-centros button{
+    cursor:pointer;
+    border:none;
+    padding:10px 15px;
+    border-radius:10px;
+}

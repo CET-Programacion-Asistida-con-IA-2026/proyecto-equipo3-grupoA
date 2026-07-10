@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
 
@@ -182,6 +183,125 @@
       </div>
     </div>
   </section>
+ <!-- ==========================================
+     CENTROS DE ATENCIÓN A LA MUJER
+========================================== -->
+
+<section class="section section-tinted" id="centros">
+
+    <div class="container fade-in">
+
+        <span class="section-label">
+            Recursos de ayuda
+        </span>
+
+        <h2 class="section-title titulo-centros">
+
+            <img
+                src="imagenes/pin.png.jpeg"
+                class="pin-titulo"
+                alt="Pin">
+
+            Centros de atención a la mujer
+
+        </h2>
+
+        <p class="section-intro">
+
+            Encontrá comisarías especializadas, centros integrales y
+            organismos de asistencia cercanos.
+
+            Buscá por nombre, localidad o tipo de centro.
+
+        </p>
+
+
+        <div class="centros-filtros">
+
+            <input
+                type="text"
+                id="buscarCentro"
+                placeholder="🔎 Buscar centro, localidad o dirección...">
+
+            <select id="filtroTipo">
+
+                <option value="todos">
+                    Todos los centros
+                </option>
+
+                <option value="comisaria">
+                    Comisarías de la Mujer
+                </option>
+
+                <option value="centro">
+                    Centros Integrales
+                </option>
+
+                <option value="justicia">
+                    Centros de Justicia
+                </option>
+
+                <option value="otro">
+                    Otros organismos
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <p id="centrosContador"></p>
+<div class="carrusel-centros">
+
+<button id="centrosPrev">
+⬅
+</button>
+
+<div class="centros-ventana">
+
+     <div 
+    id="centrosGrid"
+    class="centros-grid">
+</div>
+</div>
+
+<button id="centrosNext">
+➡
+</button>
+
+</div>
+<div class="paginacion">
+
+    <button id="btnAnterior">
+        ⬅ Anterior
+    </button>
+
+    <button id="btnSiguiente">
+        Siguiente ➜
+    </button>
+
+</div>  
+
+
+<!-- MAPA DE PUNTOS DE AYUDA -->
+<section class="section" id="mapa-ayuda">
+  <div class="container">
+    <span class="section-label">Mapa interactivo</span>
+    <h2 class="section-title">Puntos de ayuda cercanos</h2>
+    <p class="section-intro">Encontrá comisarías de la mujer, centros integrales y oficinas de atención cerca tuyo.</p>
+    <div id="mapa" style="height:500px;width:100%;border-radius:12px;"></div>
+    <div id="leyenda" style="display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;padding:14px 18px;background:#f9f0f5;border-radius:10px;border:1px solid #D8B3D4;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><div style="width:16px;height:16px;border-radius:50%;background:#9E3869;flex-shrink:0;"></div>Comisaría de la Mujer</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><div style="width:16px;height:16px;border-radius:50%;background:#6B4873;flex-shrink:0;"></div>Centro Integral de la Mujer</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><div style="width:16px;height:16px;border-radius:50%;background:#552451;flex-shrink:0;"></div>Oficina de Violencia Doméstica</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><div style="width:16px;height:16px;border-radius:50%;background:#D8B3D4;border:1px solid #999;flex-shrink:0;"></div>Dirección Gral. de Violencia de Género</div>
+    </div>
+  </div>
+</section>
+
+
+</section>
+
 
   <!-- EMERGENCIAS -->
   <section class="section section-dark" id="emergencias">
@@ -357,30 +477,17 @@
             </div>
           </div>
         </div>
-        <div class="profile-section">
-          <div class="profile-section-header"><div class="profile-section-title">🆘 Tu código QR de emergencia</div></div>
-          <div class="profile-section-body">
-            <div class="qr-box">
-              <div class="qr-canvas-wrap"><canvas id="qrCanvas" width="120" height="120"></canvas></div>
-              <div class="qr-info">
-                <h4>Compartilo o imprimilo</h4>
-                <p>Cualquier persona que escanee este QR verá tus datos médicos clave y contactos de emergencia.</p>
-                <button class="btn-outline" id="downloadQrBtn">⬇ Descargar QR</button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-      <div class="save-bar">
-        <button class="btn-secondary" id="logoutBtn">Cerrar sesión</button>
-        <button class="btn-full" style="width:auto;padding:0.7rem 2rem;" id="saveProfileBtn">Guardar cambios</button>
+      <div class="save-bar"> <!-- Botón de PDF -->
+       <button class="btn-secondary" id="logoutBtn">Cerrar sesión</button>
+       <button class="btn-outline" id="downloadPdfBtn" style="border-color:var(--berry);color:var(--berry);">📄 Descargar PDF</button>
+       <button class="btn-full" style="width:auto;padding:0.7rem 2rem;" id="saveProfileBtn">Guardar cambios</button>
       </div>
     </div>
   </div>
-
-  <!-- Librería QR -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- JavaScript propio -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
